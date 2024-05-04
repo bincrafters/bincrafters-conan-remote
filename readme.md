@@ -1,0 +1,35 @@
+# Bincrafters Conan Remote Tool
+
+This tool is something like a locally run proxy server to provide the Conan client with a Conan remote as it expects.
+
+
+Start via `fastapi dev main.py`
+
+Add a Conan remote like `http://127.0.0.1:8000/r/github+bincrafters_remote+testing_v-1000+bincrafters/`
+
+
+## Limitations
+
+  * Only Conan v2 server api is supported
+  * Only Conan clients with revisions enabled are supported
+  * Only Conan 1.* is supported (for now)
+  * From the point-of-view of the Conan client this remote is ready-only by design. No upload, no deletion etc.
+
+
+## TODO
+
+  * Make everything work:
+    * conan search
+    * conan download
+    * conan install
+    * get overview conan command / patch / server request that we want to support
+  * Write tests for all conan cli command that we want to cover
+  * Figure out if the Conan client supports download package downloads from an absolut URL or only relatives one
+  * Is the Conan Server Api v2 identical for Conan 1 und 2? If yes, how does Conan determinate packages if they are for 1 or 2? Is the User Agent relevant?
+  * Implement a list of official binary package mirrors, we check which mirrors are reachable currently, if one is, we download the binary packages from there, compare checksums, if it matches, we return the response a.k.a offering the binary package download to the conan client, if no mirror is available or checksums don't match we don't return any binary packages available
+  * execute tests in CI
+  * implement local type: clone git repo, periodically fetch git remote, git switch to selected remote checkout, serve those git files via another fastapi route
+  * publish this package via CD on pypi
+  * explore if we can write a Conan hook, that starts the server automatically when any Conan command gets called. is that possible? there is probably no safe auto-exit event/hook possible?
+  * write tool counterpart that generates the static files from an actual running conan server
+    * write this somewhat modular, beyond fetching an entire conan server, it should also be possible to only generate the data for a single package -> when we update a package, we can generate the new static files much quicker

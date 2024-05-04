@@ -1,0 +1,30 @@
+name: "remote"
+
+on: [push, pull_request]
+
+jobs:
+  test-remote:
+    name: "Tests"
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - run: |
+        pip install -r requirements.txt
+        pip install -r requirements_dev.txt
+    - run: |
+        fastapi dev main.py & disown
+    - run: |
+        conan --version
+        conan user
+        conan config set general.revisions_enabled=1
+        conan remote remove conancenter
+    - run: |
+        export CONAN_LOGGING_LEVEL=10
+        conan remote add bincrafters http://127.0.0.1:8000/r/github+bincrafters_remote+testing_v-1000+bincrafters/
+        conan remote list
+    - run: |
+        export CONAN_LOGGING_LEVEL=10
+        conan download --recipe openssl/1.1.1w@_/_#8bcd54a23717978bd94ab320e377ea93
