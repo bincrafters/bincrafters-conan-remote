@@ -29,16 +29,21 @@ def create_tarfile(file_paths: [str] = ["requirements.txt",]):
     data.seek(0)
     return data
 
-@app.get("/")
-def read_root(request: Request):
-    user_agent = request.headers.get('user-agent')
-    return {"Hello": "World", "User-Agent": user_agent, "pwd": os.getcwd()}
-
 async def make_request(getting_url: str, user_agent: str):
     async with httpx.AsyncClient() as client:
         logger.info(f"Getting URL: {getting_url}")
         r = await client.get(getting_url, headers={'User-Agent': user_agent})
     return r
+
+@app.get("/")
+def read_root(request: Request):
+    user_agent = request.headers.get('user-agent')
+    return {"Hello": "World", "User-Agent": user_agent, "pwd": os.getcwd()}
+
+
+@app.get("/v1/ping")
+def v1_ping():
+    return Response(headers={'x-conan-server-version': '0.20.0', 'x-conan-server-capabilities': 'complex_search,checksum_deploy,revisions,matrix_params'})
 
 @app.get("/{url_path:path}")
 async def get_external_site(request: Request, url_path: str):
