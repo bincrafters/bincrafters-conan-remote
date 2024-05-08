@@ -26,6 +26,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler())
 
+cached_headers = {}
 
 async def make_request(getting_url: str, user_agent: str):
     async with httpx.AsyncClient() as client:
@@ -35,6 +36,10 @@ async def make_request(getting_url: str, user_agent: str):
 
 @app.get("/{url_path:path}")
 async def get_external_site(request: Request, url_path: str):
+
+    if url_path == "v1/ping" and len(cached_headers) != 0:
+        logger.info(f"Cached headers: {cached_headers}")
+        return Response(headers=cached_headers)
 
     # User Agent Manipulation
     user_agent = request.headers.get('user-agent')
@@ -92,10 +97,13 @@ async def get_external_site(request: Request, url_path: str):
             with open(os.path.join(cache_path), "wb") as f:
                 f.write(r.content)
         else:
+            for header in r.headers:
+                if header.startswith("x-conan"):
+                    cached_headers[header] = r.headers[header]
             with open(os.path.join(cache_path), "wb") as f:
                 f.write(r.content)
 
-    return Response(content=r.content, media_type=content_type, headers={'x-conan-server-version': '0.20.0', 'x-conan-server-capabilities': 'complex_search,checksum_deploy,revisions,matrix_params'})
+    return Response(content=r.content, media_type=content_type, headers=cached_headers)
 
 
 def _shell(command: str, check: bool=True) -> str:
