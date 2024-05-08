@@ -73,18 +73,19 @@ async def get_external_site(request: Request, url_path: str):
     logger.info(f"cache_dir: {cache_dir}")
     os.makedirs(cache_dir, exist_ok=True)
 
-    if filename.endswith(".tgz"):
-        tar_file = tarfile.open(fileobj=io.BytesIO(r.content), mode='r:gz')
-        tar_file.extractall(os.path.join(cache_dir, new_tgz_file_dir))
-        json_data = {"files": [f"{new_tgz_file_dir}/{f.name}" for f in tar_file.getmembers()]}
-        tar_file.close()
-        with open(os.path.join(cache_dir, filename + ".json"), "w") as f:
-            json.dump(json_data, f)
-        with open(os.path.join(cache_path), "wb") as f:
-            f.write(r.content)
-    else:
-        with open(os.path.join(cache_path), "wb") as f:
-            f.write(r.content)
+    if not url_path in ["v1/ping",]:
+        if filename.endswith(".tgz"):
+            tar_file = tarfile.open(fileobj=io.BytesIO(r.content), mode='r:gz')
+            tar_file.extractall(os.path.join(cache_dir, new_tgz_file_dir))
+            json_data = {"files": [f"{new_tgz_file_dir}/{f.name}" for f in tar_file.getmembers()]}
+            tar_file.close()
+            with open(os.path.join(cache_dir, filename + ".json"), "w") as f:
+                json.dump(json_data, f)
+            with open(os.path.join(cache_path), "wb") as f:
+                f.write(r.content)
+        else:
+            with open(os.path.join(cache_path), "wb") as f:
+                f.write(r.content)
 
     return Response(content=r.content, media_type=content_type, headers={'x-conan-server-version': '0.20.0', 'x-conan-server-capabilities': 'complex_search,checksum_deploy,revisions,matrix_params'})
 
