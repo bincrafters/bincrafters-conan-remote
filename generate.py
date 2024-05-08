@@ -1,11 +1,15 @@
 from typing import Union
 import logging
+import logging.config
 import httpx
 import tarfile 
 import io
 import os 
 import json
 import shutil
+import subprocess
+import atexit
+import time
 
 from fastapi import FastAPI, Request
 from fastapi.responses import Response
@@ -13,8 +17,12 @@ from starlette.responses import RedirectResponse, StreamingResponse
 import uvicorn
 
 
-app = FastAPI()
+app = FastAPI(debug=True)
+# logging.config.fileConfig("logging.conf")
 logger = logging.getLogger(__name__)
+# logger = logging.getLogger("uvicorn.info")
+
+logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler())
 
@@ -90,5 +98,42 @@ async def get_external_site(request: Request, url_path: str):
     return Response(content=r.content, media_type=content_type, headers={'x-conan-server-version': '0.20.0', 'x-conan-server-capabilities': 'complex_search,checksum_deploy,revisions,matrix_params'})
 
 
+def _shell(command: str, check: bool=True) -> str:
+    logger.info(f"Run: {command}")
+    process = subprocess.run(command, shell=True, check=check, stdout=subprocess.PIPE, universal_newlines=True)
+    logger.info(f"Shell: {process.stdout}")
+    return process.stdout
+
+def _shell_background(command: str) -> None:
+    process = subprocess.Popen(command, shell=True)
+    atexit.register(process.kill)
+    return None
+
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    _PORT = 8086
+
+    # uvicorn.run(app, host="0.0.0.0", port=_PORT, log_level="info")
+    _shell_background(f"fastapi dev generate.py --port {_PORT} --no-reload")
+    time.sleep(3)
+
+    _shell("conan remote remove bincrafters-remote-tmp || true", check=False)
+    _shell(f"conan remote add bincrafters-remote-tmp http://127.0.0.1:{_PORT}/")
+    _shell("conan remote list")
+
+    references = _shell("conan search '*' -r bincrafters-remote-tmp --raw --case-sensitive")
+    references = references.split("\n")
+    revisions = {}
+    for reference in references:
+        if reference == "":
+            continue
+        revisions_search = _shell(f"conan search {reference} -r bincrafters-remote-tmp --raw --case-sensitive --revisions")
+        reference_revisions = []
+        for revision in revisions_search.split("\n"):
+            revision_id = revision.split(" ")[0]
+            # _revision_date = revision.split(" ")[1:]
+            reference_revisions.append(revision_id)
+        revisions[reference] = reference_revisions
+    logger.info(f"Revisions: {revisions}")
+
+
+    
