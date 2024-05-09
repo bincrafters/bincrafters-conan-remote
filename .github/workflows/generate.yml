@@ -1,6 +1,16 @@
 name: "Generate Static Remote"
 
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - "generate.py"
+      - ".github/workflows/generate.yml"
+      - "remote_repo_meta_files/**"
+  pull_request:
+    paths:
+      - "generate.py"
+      - ".github/workflows/generate.yml"
+      - "remote_repo_meta_files/**"
 
 jobs:
   test-remote:
@@ -40,6 +50,7 @@ jobs:
       run: |
         git config --global user.email "${{ secrets.BOT_GITHUB_EMAIL }}"
         git config --global user.name "${{ secrets.BOT_GITHUB_NAME }}"
+        git config --global http.https://github.com/.extraheader "AUTHORIZATION: bearer ${{ secrets.BOT_GITHUB_TOKEN }}"
         rm -rf remote/r/${{ env.REMOTE_NAME }}/
         cp -r cache/generated/* remote/
         cp -r remote_repo_meta_files/* remote/
