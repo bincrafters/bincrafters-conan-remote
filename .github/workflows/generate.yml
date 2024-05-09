@@ -1,0 +1,30 @@
+name: "Generate Static Remote"
+
+on: [push, pull_request]
+
+jobs:
+  test-remote:
+    name: "Generate"
+    runs-on: ubuntu-22.04
+    env:
+        CONAN_LOGGING_LEVEL: 10
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - run: |
+        pip install -r requirements.txt
+        pip install -r requirements_dev.txt
+    - name: Configure Conan
+      run: |
+        conan --version
+        conan user
+        conan config set general.revisions_enabled=1
+        conan remote remove conancenter
+    - name: Generate
+      run: |
+        python generate.py --remote-url https://bincrafters.jfrog.io/artifactory/api/conan/conan-legacy-inexorgame/ --remote-name inexorgame
+    - name: List Generate Files
+      run: |
+        ls -laR cache/
