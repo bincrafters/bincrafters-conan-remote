@@ -30,46 +30,48 @@ project_requirements = get_requires("requirements.txt")
 
 
 setup(
-    name='virtual-conan-server',
-    python_requires='>=3.6',
+    name="bincrafters-conan-remote",
+    python_requires=">=3.8",
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
     version="0.0.1",
 
-    description='Conan C/C++ package manager',
-    long_description="TMP",
-    long_description_content_type='text/x-rst',
+    description="Run locally a Conan remote that builds open static files.",
+    long_description="This tool is something like a locally run proxy server to provide the Conan client with a Conan remote as it expects, building upon static remote text files.",
+    long_description_content_type="text/markdown",
 
-    # The project's main homepage.
-    url='https://github.com/bincrafters/remote/',
+    url="https://github.com/bincrafters/bincrafters-conan-remote",
     project_urls={
-        'Documentation': 'https://docs.conan.io',
-        'Source': 'https://github.com/conan-io/conan',
-        'Tracker': 'https://github.com/conan-io/conan/issues',
+        "Documentation": "https://github.com/bincrafters/bincrafters-conan-remote",
+        "Source": "https://github.com/bincrafters/bincrafters-conan-remote",
+        "Tracker": "https://github.com/bincrafters/community/issues",
     },
 
-    # Author details
-    author='Bincrafters',
-    author_email='bincrafters@cr0ydon.com',
+    author="Bincrafters",
+    author_email="bincrafters@cr0ydon.com",
 
-    # Choose your license
-    license='MIT',
+    license="MIT",
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Intended Audience :: Developers',
-        'Topic :: Software Development :: Build Tools',
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8'
+        "Development Status :: 3 - Alpha",
+        "Intended Audience :: Developers",
+        "Topic :: Software Development",
+        "Topic :: Software Development :: Build Tools",
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
     ],
 
     # What does your project relate to?
-    keywords=['C/C++', 'package', 'libraries', 'developer', 'manager',
-              'dependency', 'tool', 'c', 'c++', 'cpp'],
+    keywords=["conan", "remote", "static", "bincrafters", "C/C++", "package", "libraries", "developer", "manager",
+            "dependency", "tool", "c", "c++", "cpp"],
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
@@ -89,21 +91,21 @@ setup(
     # dependencies). You can install these using the following syntax,
     # for example:
     # $ pip install -e .[dev,test]
-   # extras_require={
-   #     'dev': dev_requirements,
-   #     'test': dev_requirements,
+    # extras_require={
+    #     'dev': dev_requirements,
+    #     'test': dev_requirements,
     #},
 
     # If there are data files included in your packages that need to be
     # installed, specify them here.  If using Python 2.6 or less, then these
     # have to be included in MANIFEST.in as well.
-   # package_data={
+    # package_data={
     #    'conans': ['*.txt'],
     #},
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages. See:
-    # http://docs.python.org/3.4/distutils/setupscript.html#installing-additional-files # noqa
+    # http://docs.python.org/3.8/distutils/setupscript.html#installing-additional-files # noqa
     # In this case, 'data_file' will be installed into '<sys.prefix>/my_data'
     # data_files=[('my_data', ['data/data_file'])],
 
