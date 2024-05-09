@@ -59,11 +59,11 @@ async def get_external_site(request: Request, url_path: str):
 
     cache_url_path = os.path.join("r", remote_config, url_path.replace("/", os.sep))
 
-    logger.info(f"Remote Type: {remote_type}, Remote HTTP URL: {remote_http_url}, Remote Name: {remote_config}")
+    # logger.info(f"Remote Type: {remote_type}, Remote HTTP URL: {remote_http_url}, Remote Name: {remote_config}")
     # logger.info(f"url_path: {url_path}, cache_url_path: {cache_url_path}")
 
     if url_path == "v1/ping" and len(cached_headers) != 0:
-        logger.info(f"Cached headers: {cached_headers}")
+        # logger.info(f"Cached headers: {cached_headers}")
         return Response(headers=cached_headers)
 
     # User Agent Manipulation
@@ -122,7 +122,7 @@ async def get_external_site(request: Request, url_path: str):
 def _shell(command: str, check: bool=True) -> str:
     logger.info(f"Run: {command}")
     process = subprocess.run(command, shell=True, check=check, stdout=subprocess.PIPE, universal_newlines=True)
-    logger.info(f"Shell: {process.stdout}")
+    logger.info(f"Out: {process.stdout}")
     return process.stdout
 
 def _shell_background(command: str) -> None:
