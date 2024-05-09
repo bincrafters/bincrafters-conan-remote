@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-22.04
     env:
         CONAN_LOGGING_LEVEL: 20
+        REMOTE_URL: https://bincrafters.jfrog.io/artifactory/api/conan/conan-legacy-inexorgame/
+        REMOTE_NAME: inexorgame
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
@@ -24,7 +26,25 @@ jobs:
         conan remote remove conancenter
     - name: Generate
       run: |
-        python generate.py --remote-url https://bincrafters.jfrog.io/artifactory/api/conan/conan-legacy-inexorgame/ --remote-name inexorgame
+        python generate.py --remote-url ${{ env.REMOTE_URL }} --remote-name ${{ env.REMOTE_NAME }}
     - name: List Generate Files
       run: |
+        du -sh cache/
         ls -laR cache/
+    - uses: actions/checkout@v4
+      with:
+        repository: "bincrafters/remote"
+        ref: "testing/v-999"
+        path: "remote"
+        token: ${{ secrets.BOT_GITHUB_TOKEN }}
+    - name: Commit Generate Files
+      run: |
+        git config --global user.email "${{ secrets.BOT_GITHUB_EMAIL }}"
+        git config --global user.name "${{ secrets.BOT_GITHUB_NAME }}"
+        rm -rf remote/r/${{ env.REMOTE_NAME }}/
+        cp -r cache/generated/* remote/
+        cp -r remote_repo_meta_files/* remote/
+        cd remote
+        git add -A .s
+        git commit -m "Update remote"
+        git push
