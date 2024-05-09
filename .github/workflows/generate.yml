@@ -54,6 +54,6 @@ jobs:
         cp -r cache/generate/* remote/
         cp -r remote_repo_meta_files/* remote/
         cd remote
-        git add -A .s
+        git add -A .
         git commit -m "Update remote"
         git push
