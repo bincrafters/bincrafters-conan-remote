@@ -11,7 +11,6 @@ import subprocess
 import atexit
 import time
 import argparse
-import hashlib
 
 from fastapi import FastAPI, Request
 from fastapi.responses import Response
@@ -105,10 +104,6 @@ async def get_external_site(request: Request, url_path: str):
         if filename.endswith(".tgz"):
             with open(os.path.join(cache_path), "wb") as f:
                 f.write(r.content)
-            with open(os.path.join(cache_path), 'rb') as f:
-                bytes = f.read()
-                logger.info(f"Sha256 file: {hashlib.sha256(bytes).hexdigest()}")
-            logger.info(f"Sha256 memory bytes: {hashlib.sha256(r.content).hexdigest()}")
             tar_file = tarfile.open(fileobj=io.BytesIO(r.content), mode='r:gz')
             tar_file.extractall(os.path.join(cache_dir, new_tgz_file_dir))
             json_data = {"files": [f"{new_tgz_file_dir}/{f.name}" for f in tar_file.getmembers()]}

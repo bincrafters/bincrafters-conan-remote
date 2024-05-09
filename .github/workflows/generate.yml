@@ -51,7 +51,7 @@ jobs:
         git config --global user.name "${{ secrets.BOT_GITHUB_NAME }}"
         git config --global http.https://github.com/.extraheader "AUTHORIZATION: bearer ${{ secrets.BOT_GITHUB_TOKEN }}"
         rm -rf remote/r/${{ env.REMOTE_NAME }}/
-        cp -r cache/generated/* remote/
+        cp -r cache/generate/* remote/
         cp -r remote_repo_meta_files/* remote/
         cd remote
         git add -A .s
