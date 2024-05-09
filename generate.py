@@ -11,7 +11,7 @@ import subprocess
 import atexit
 import time
 import argparse
-import urllib.parse
+import hashlib
 
 from fastapi import FastAPI, Request
 from fastapi.responses import Response
@@ -32,7 +32,7 @@ cached_headers = {}
 
 async def make_request(getting_url: str, user_agent: str):
     async with httpx.AsyncClient() as client:
-        logger.info(f"Getting URL: {getting_url}")
+        # logger.info(f"Getting URL: {getting_url}")
         r = await client.get(getting_url, headers={'User-Agent': user_agent})
     return r
 
@@ -74,6 +74,8 @@ async def get_external_site(request: Request, url_path: str):
     default_response_type = "application/json"
     if url_path.endswith(".txt") or url_path.endswith(".py"):
         default_response_type = "text/plain"
+    elif url_path.endswith(".tgz"):
+        default_response_type = "application/gzip"
 
     r = await make_request(f"{remote_http_url}{url_path}", user_agent)
     # logger.info(f"Headers: {r.headers}")
@@ -96,11 +98,12 @@ async def get_external_site(request: Request, url_path: str):
             cache_dir = os.sep.join(cache_path.split(os.sep)[:-1])
 
     logger.info(f"cache_path: {cache_path}")
-    logger.info(f"cache_dir: {cache_dir}")
+    # logger.info(f"cache_dir: {cache_dir}")
     os.makedirs(cache_dir, exist_ok=True)
 
     if not url_path in ["v1/ping",]:
         if filename.endswith(".tgz"):
+            logger.info(f"Sha256: {hashlib.sha256(r.content).hexdigest()}")
             tar_file = tarfile.open(fileobj=io.BytesIO(r.content), mode='r:gz')
             tar_file.extractall(os.path.join(cache_dir, new_tgz_file_dir))
             json_data = {"files": [f"{new_tgz_file_dir}/{f.name}" for f in tar_file.getmembers()]}
@@ -138,7 +141,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     _PORT = args.port
-    # remote_url_quoted = urllib.parse.quote(args.remote_url, safe="")
     remote_url_quoted = "{" + args.remote_url + "}"
 
     # uvicorn.run(app, host="0.0.0.0", port=_PORT, log_level="info")
