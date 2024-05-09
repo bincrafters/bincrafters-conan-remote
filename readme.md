@@ -5,14 +5,14 @@ This tool is something like a locally run proxy server to provide the Conan clie
 
 Start via `fastapi dev main.py`
 
-Add a Conan remote like `http://127.0.0.1:8000/r/github+bincrafters_remote+testing_v-1000+bincrafters/`
+Add a Conan remote like `http://127.0.0.1:8000/r/github+bincrafters_remote+testing_v-998+bincrafters/`
 
 
 ## Limitations
 
-  * Only Conan v2 server api is supported
   * Only Conan clients with revisions enabled are supported
-  * Only Conan 1.* is supported (for now)
+  * Features that are covered by both v1 and v2 of the REST API will only be supported via the v2 API
+  * Only Conan 1.* is explicitly supported for now, altough the REST API does not seem to be Conan 1/2 specific. So Conan v2 might just work
   * From the point-of-view of the Conan client this remote is ready-only by design. No upload, no deletion etc.
 
 
