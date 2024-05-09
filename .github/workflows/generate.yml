@@ -8,7 +8,6 @@ jobs:
     runs-on: ubuntu-22.04
     env:
         CONAN_LOGGING_LEVEL: 20
-        REMOTE_URL: https://bincrafters.jfrog.io/artifactory/api/conan/conan-legacy-inexorgame/
         REMOTE_NAME: inexorgame
     steps:
     - uses: actions/checkout@v4
@@ -26,7 +25,7 @@ jobs:
         conan remote remove conancenter
     - name: Generate
       run: |
-        python generate.py --remote-url ${{ env.REMOTE_URL }} --remote-name ${{ env.REMOTE_NAME }}
+        python generate.py --remote-url https://bincrafters.jfrog.io/artifactory/api/conan/conan-legacy-inexorgame/ --remote-name ${{ env.REMOTE_NAME }}
     - name: List Generate Files
       run: |
         du -sh cache/
