@@ -6,11 +6,15 @@ on:
       - "generate.py"
       - ".github/workflows/generate.yml"
       - "remote_repo_meta_files/**"
+      - "requirements.txt"
+      - "requirements_dev.txt"
   pull_request:
     paths:
       - "generate.py"
       - ".github/workflows/generate.yml"
       - "remote_repo_meta_files/**"
+      - "requirements.txt"
+      - "requirements_dev.txt"
 
 jobs:
   test-remote:
