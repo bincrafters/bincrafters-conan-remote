@@ -132,7 +132,7 @@ def _shell_background(command: str) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate a static Conan remote from an existing Conan remote.")
-    parser.add_argument("--port", type=int, default=8042, help="Port to run the FastAPI server.")
+    parser.add_argument("--port", type=int, default=8043, help="Port to run the FastAPI server.")
     parser.add_argument("--remote-url", type=str, default="https://bincrafters.jfrog.io/artifactory/api/conan/conan-legacy-inexorgame/", help="Remote URL to generate the static remote from. It can not contain spaces or plus signs (+) and has to end on a slash.")
     parser.add_argument("--remote-name", type=str, default="inexorgame", help="Remote URL to generate the static remote from.")
     args = parser.parse_args()
