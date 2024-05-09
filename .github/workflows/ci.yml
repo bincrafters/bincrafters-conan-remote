@@ -1,6 +1,21 @@
 name: "Local Remote Testing"
 
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - "main.py"
+      - "setup.py"
+      - ".github/workflows/ci.yml"
+      - "requirements.txt"
+      - "requirements_dev.txt"
+  pull_request:
+    paths:
+      - "main.py"
+      - "setup.py"
+      - ".github/workflows/ci.yml"
+      - "requirements.txt"
+      - "requirements_dev.txt"
+
 
 jobs:
   test-remote:
@@ -25,8 +40,9 @@ jobs:
         conan user
         conan config set general.revisions_enabled=1
         conan remote remove conancenter
-        conan remote add bincrafters http://127.0.0.1:8000/r/github+bincrafters_remote+testing_v-1000+bincrafters/
+        conan remote add inexorgame http://127.0.0.1:8000/r/github+bincrafters_remote+testing_v-998+inexorgame/
         conan remote list
     - name: Tests
       run: |
-        conan download --recipe openssl/1.1.1w@_/_#8bcd54a23717978bd94ab320e377ea93
+        conan download --recipe sdl2/2.0.14@bincrafters/stable
+        conan download --recipe grpc/1.34.1@inexorgame/stable#0
