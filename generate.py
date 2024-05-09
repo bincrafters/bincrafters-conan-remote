@@ -103,15 +103,18 @@ async def get_external_site(request: Request, url_path: str):
 
     if not url_path in ["v1/ping",]:
         if filename.endswith(".tgz"):
-            logger.info(f"Sha256: {hashlib.sha256(r.content).hexdigest()}")
+            with open(os.path.join(cache_path), "wb") as f:
+                f.write(r.content)
+            with open(os.path.join(cache_path), 'rb') as f:
+                bytes = f.read()
+                logger.info(f"Sha256 file: {hashlib.sha256(bytes).hexdigest()}")
+            logger.info(f"Sha256 memory bytes: {hashlib.sha256(r.content).hexdigest()}")
             tar_file = tarfile.open(fileobj=io.BytesIO(r.content), mode='r:gz')
             tar_file.extractall(os.path.join(cache_dir, new_tgz_file_dir))
             json_data = {"files": [f"{new_tgz_file_dir}/{f.name}" for f in tar_file.getmembers()]}
             tar_file.close()
             with open(os.path.join(cache_dir, filename + ".json"), "w") as f:
                 json.dump(json_data, f)
-            with open(os.path.join(cache_path), "wb") as f:
-                f.write(r.content)
         else:
             for header in r.headers:
                 if header.startswith("x-conan"):
