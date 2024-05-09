@@ -31,7 +31,7 @@ logger.addHandler(logging.StreamHandler())
 cached_headers = {}
 
 async def make_request(getting_url: str, user_agent: str):
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(follow_redirects=True) as client:
         # logger.info(f"Getting URL: {getting_url}")
         r = await client.get(getting_url, headers={'User-Agent': user_agent})
     return r
