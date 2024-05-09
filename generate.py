@@ -149,6 +149,7 @@ if __name__ == "__main__":
     _shell(f"conan remote add bincrafters-remote-tmp http://127.0.0.1:{_PORT}/r/conan+{remote_url_quoted}+{args.remote_name}/")
     _shell("conan remote list")
 
+    # Get all recipes and recipes revisions
     references = _shell("conan search '*' -r bincrafters-remote-tmp --raw --case-sensitive")
     references = references.split("\n")
     revisions = {}
@@ -159,10 +160,22 @@ if __name__ == "__main__":
         reference_revisions = []
         for revision in revisions_search.split("\n"):
             revision_id = revision.split(" ")[0]
+            if revision_id == "":
+                continue
             # _revision_date = revision.split(" ")[1:]
             reference_revisions.append(revision_id)
         revisions[reference] = reference_revisions
     logger.info(f"Revisions: {revisions}")
 
+    # TODO: How to get package revisions given a specific package ID?
+    packages = {}
+
+    # Download recipes
+    for d_reference, d_revisions in revisions.items():
+        for d_revision in d_revisions:
+            _shell(f"conan download {d_reference}#{d_revision} -r bincrafters-remote-tmp --recipe")
+
+
+    # TODO: Download all packages
 
     
