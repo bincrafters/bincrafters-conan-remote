@@ -21,6 +21,12 @@ jobs:
         REMOTE_NAME: inexorgame
     steps:
     - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
+      with:
+        repository: "bincrafters/remote"
+        ref: "testing/v-999"
+        path: "remote"
+        token: ${{ secrets.BOT_GITHUB_TOKEN }}
     - uses: actions/setup-python@v5
       with:
         python-version: "3.12"
@@ -40,16 +46,10 @@ jobs:
       run: |
         du -sh cache/
         ls -laR cache/
-    - uses: actions/checkout@v4
-      with:
-        repository: "bincrafters/remote"
-        ref: "testing/v-999"
-        path: "remote"
     - name: Commit Generate Files
       run: |
         git config --global user.email "${{ secrets.BOT_GITHUB_EMAIL }}"
         git config --global user.name "${{ secrets.BOT_GITHUB_NAME }}"
-        git config --global http.https://github.com/.extraheader "AUTHORIZATION: bearer ${{ secrets.BOT_GITHUB_TOKEN }}"
         rm -rf remote/r/${{ env.REMOTE_NAME }}/
         cp -r cache/generate/* remote/
         cp -r remote_repo_meta_files/* remote/
