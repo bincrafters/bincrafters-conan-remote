@@ -24,7 +24,7 @@ jobs:
     - uses: actions/checkout@v4
       with:
         repository: "bincrafters/remote"
-        ref: "testing/v-999"
+        ref: "testing/v-998"
         path: "remote"
         token: ${{ secrets.BOT_GITHUB_TOKEN }}
     - uses: actions/setup-python@v5

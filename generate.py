@@ -28,6 +28,8 @@ logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler())
 
 cached_headers = {}
+# Toggle, if True then it saves .tgz files
+CREATE_FULL_LOCAL_BACKUP = False
 
 async def make_request(getting_url: str, user_agent: str):
     async with httpx.AsyncClient(follow_redirects=True) as client:
@@ -102,8 +104,9 @@ async def get_external_site(request: Request, url_path: str):
 
     if not url_path in ["v1/ping",]:
         if filename.endswith(".tgz"):
-            with open(os.path.join(cache_path), "wb") as f:
-                f.write(r.content)
+            if CREATE_FULL_LOCAL_BACKUP:
+                with open(os.path.join(cache_path), "wb") as f:
+                    f.write(r.content)
             tar_file = tarfile.open(fileobj=io.BytesIO(r.content), mode='r:gz')
             tar_file.extractall(os.path.join(cache_dir, new_tgz_file_dir))
             json_data = {"files": [f"{new_tgz_file_dir}/{f.name}" for f in tar_file.getmembers()]}
