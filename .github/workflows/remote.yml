@@ -3,7 +3,7 @@ name: "Local Remote Testing"
 on:
   push:
     paths:
-      - ".github/workflows/ci.yml"
+      - ".github/workflows/remote.yml"
       - "bincrafters_conan_remote/main.py"
       - "bincrafters_conan_remote/remote.py"
       - "bincrafters_conan_remote/requirements.txt"
@@ -11,7 +11,7 @@ on:
       - "setup.py"
   pull_request:
     paths:
-      - ".github/workflows/ci.yml"
+      - ".github/workflows/remote.yml"
       - "bincrafters_conan_remote/main.py"
       - "bincrafters_conan_remote/remote.py"
       - "bincrafters_conan_remote/requirements.txt"
