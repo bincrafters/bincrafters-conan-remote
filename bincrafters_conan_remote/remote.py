@@ -5,6 +5,7 @@ import tarfile
 import io
 import os 
 import json
+import uvicorn
 
 from fastapi import FastAPI, Request
 from fastapi.responses import Response
@@ -130,7 +131,7 @@ async def get_external_site(request: Request, url_path: str):
         logger.info(f"Getting URL: {getting_url}")
         r = await client.get(getting_url, headers={'User-Agent': user_agent})
 
-    logger.info(f"Headers: {r.headers}")
+    # logger.info(f"Headers: {r.headers}")
     content_type = r.headers.get('Content-Type', 'application/json')
     if remote_http_suffix == ".json":
         content_type = "application/json"
@@ -149,5 +150,5 @@ async def get_external_site(request: Request, url_path: str):
 
 
 
-if __name__ == "__main__":
+def run_remote(args):
     uvicorn.run(app, host="0.0.0.0", port=8000)

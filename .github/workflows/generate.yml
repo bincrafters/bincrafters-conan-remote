@@ -34,10 +34,9 @@ jobs:
     - uses: actions/setup-python@v5
       with:
         python-version: "3.12"
-    - run: |
-        cd bincrafters_conan_remote/
-        pip install -r requirements.txt
-        pip install -r requirements_dev.txt
+    - name: Install package
+      run: |
+        pip install .
     - name: Configure Conan
       run: |
         conan --version
@@ -46,7 +45,7 @@ jobs:
         conan remote remove conancenter
     - name: Generate
       run: |
-        python generate.py --remote-url https://bincrafters.jfrog.io/artifactory/api/conan/conan-legacy-inexorgame/ --remote-name ${{ env.REMOTE_NAME }}
+        bincrafters-conan-remote generate --remote-url https://bincrafters.jfrog.io/artifactory/api/conan/conan-legacy-inexorgame/ --remote-name ${{ env.REMOTE_NAME }}
     - name: List Generate Files
       run: |
         du -sh cache/

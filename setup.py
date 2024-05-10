@@ -111,11 +111,9 @@ setup(
     # To provide executable scripts, use entry points in preference to the
     # "scripts" keyword. Entry points provide cross-platform support and allow
     # pip to create the appropriate form of executable for the target platform.
-    #entry_points={
-    #    'console_scripts': [
-    #        'conan=conans.conan:run',
-    #        'conan_server=conans.conan_server:run',
-    #        'conan_build_info=conans.build_info.command:run'
-    #    ],
-    #},
+    entry_points={
+        "console_scripts": [
+            "bincrafters-conan-remote=bincrafters_conan_remote.main:run"
+        ],
+    },
 )

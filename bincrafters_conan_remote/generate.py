@@ -11,6 +11,7 @@ import subprocess
 import atexit
 import time
 import argparse
+import threading
 
 from fastapi import FastAPI, Request
 from fastapi.responses import Response
@@ -139,22 +140,22 @@ def _shell_background(command: str) -> None:
     atexit.register(process.kill)
     return None
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generate a static Conan remote from an existing Conan remote.")
-    parser.add_argument("--port", type=int, default=8043, help="Port to run the FastAPI server.")
-    parser.add_argument("--remote-url", type=str, default="https://bincrafters.jfrog.io/artifactory/api/conan/conan-legacy-inexorgame/", help="Remote URL to generate the static remote from. It can not contain spaces or plus signs (+) and has to end on a slash.")
-    parser.add_argument("--remote-name", type=str, default="inexorgame", help="Remote URL to generate the static remote from.")
-    args = parser.parse_args()
+def _run_uvicorn(port: int) -> None:
+    uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
 
+def run_generate(args):
     _PORT = args.port
     remote_url_quoted = "{" + args.remote_url + "}"
 
+    server_thread = threading.Thread(target=_run_uvicorn, args=(_PORT,))
+    server_thread.start()
+
     # uvicorn.run(app, host="0.0.0.0", port=_PORT, log_level="info")
-    _shell_background(f"fastapi dev generate.py --port {_PORT} --no-reload")
+    #_shell_background(f"fastapi dev generate.py --port {_PORT} --no-reload")
     time.sleep(3)
 
-    _shell("conan remote remove bincrafters-remote-tmp || true", check=False)
-    _shell(f"conan remote add bincrafters-remote-tmp http://127.0.0.1:{_PORT}/r/conan+{remote_url_quoted}+{args.remote_name}/")
+    _shell("conan remote remove bincrafters-remote-tmp", check=False)
+    _shell(f'conan remote add bincrafters-remote-tmp "http://127.0.0.1:{_PORT}/r/conan+{remote_url_quoted}+{args.remote_name}/"')
     _shell("conan remote list")
 
     # Get all recipes and recipes revisions

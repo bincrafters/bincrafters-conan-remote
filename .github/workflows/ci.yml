@@ -24,26 +24,25 @@ jobs:
     name: "Tests"
     runs-on: ubuntu-22.04
     env:
-        CONAN_LOGGING_LEVEL: 10
+      CONAN_LOGGING_LEVEL: 10
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
       with:
         python-version: "3.12"
-    - run: |
-        cd bincrafters_conan_remote/
-        pip install -r requirements.txt
-        pip install -r requirements_dev.txt
+    - name: Install package
+      run: |
+        pip install .
     - name: Start Local Server
       run: |
-        fastapi dev remote.py & disown
+        bincrafters-remote-conan run & disown
     - name: Configure Conan
       run: |
         conan --version
         conan user
         conan config set general.revisions_enabled=1
         conan remote remove conancenter
-        conan remote add inexorgame http://127.0.0.1:8000/r/github+bincrafters_remote+testing_v-998+inexorgame/
+        conan remote add inexorgame "http://127.0.0.1:8000/r/github+bincrafters_remote+testing_v-998+inexorgame/""
         conan remote list
     - name: Tests
       run: |
