@@ -1,7 +1,13 @@
 import argparse
+import logging
+
 from bincrafters_conan_remote.generate import run_generate
 from bincrafters_conan_remote.remote import run_remote
 
+
+logger = logging.getLogger("bincrafters-conan-remote")
+logger.setLevel(logging.INFO)
+logger.addHandler(logging.StreamHandler())
 
 def run():
     parser = argparse.ArgumentParser(description="Experimental. Don't use.")

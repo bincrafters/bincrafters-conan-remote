@@ -1,6 +1,5 @@
 from typing import Union
 import logging
-import logging.config
 import tarfile 
 import io
 import os 
@@ -21,13 +20,7 @@ from bincrafters_conan_remote.helpers import conf, make_request
 
 
 app = FastAPI(debug=True)
-# logging.config.fileConfig("logging.conf")
-logger = logging.getLogger(__name__)
-# logger = logging.getLogger("uvicorn.info")
-
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-logger.addHandler(logging.StreamHandler())
+logger = logging.getLogger("bincrafters-conan-remote")
 
 cached_headers = {}
 # Toggle, if True then it saves .tgz files

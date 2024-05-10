@@ -3,7 +3,7 @@ import asyncio
 import httpx
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("bincrafters-conan-remote")
 
 conf = {
     "filename_server_conan_headers": "server_headers.json",

@@ -15,9 +15,7 @@ from bincrafters_conan_remote.helpers import conf, make_request, make_request_as
 
 
 app = FastAPI()
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-logger.addHandler(logging.StreamHandler())
+logger = logging.getLogger("bincrafters-conan-remote")
 
 cached_headers = {}
 
