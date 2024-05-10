@@ -68,12 +68,12 @@ async def get_external_site(request: Request, url_path: str):
         user_agent = conf["user_agent_default"]
 
     # Remote Source Selection
-    # example /r/github+bincrafters_remote+testing_v-1000+bincrafters/
-    remote_type = "conancenter"
+    # example /r/github+bincrafters_remote+testing_v-998+inexorgame/
+    remote_type = conf["remote_default_type"]
     remote_types_allowed = ["local", "github", "conancenter"]
-    remote_source = "bincrafters/remote" # this is not allowed to have underscores
-    remote_checkout = "testing/v-1000" # this is not allowed to have underscores
-    remote_selection = "bincrafters"
+    remote_source = conf["remote_default_source"] # this is not allowed to have underscores
+    remote_checkout = conf["remote_default_checkout"] # this is not allowed to have underscores
+    remote_selection = conf["remote_default_selection"]
     remote_config = f"{remote_type}+{remote_source}+{remote_checkout}+{remote_selection}"
     if url_path.startswith("r/"):
         remote_config = url_path.split('/')[1]
