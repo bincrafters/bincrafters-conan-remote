@@ -35,7 +35,7 @@ jobs:
         pip install .
     - name: Start Local Server
       run: |
-        bincrafters-remote-conan run & disown
+        bincrafters-conan-remote run & disown
     - name: Configure Conan
       run: |
         conan --version
