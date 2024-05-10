@@ -25,8 +25,8 @@ def get_requires(filename):
     return requirements
 
 
-project_requirements = get_requires("requirements.txt")
-# dev_requirements = get_requires("requirements_dev.txt")
+project_requirements = get_requires(os.path.join("bincrafters_conan_remote", "requirements.txt"))
+# dev_requirements = get_requires(os.path.join("bincrafters_conan_remote", "requirements_dev.txt"))
 
 
 setup(
@@ -97,11 +97,10 @@ setup(
     #},
 
     # If there are data files included in your packages that need to be
-    # installed, specify them here.  If using Python 2.6 or less, then these
-    # have to be included in MANIFEST.in as well.
-    # package_data={
-    #    'conans': ['*.txt'],
-    #},
+    # installed, specify them here.
+    package_data={
+        "bincrafters_conan_remote": ["remote_repo_meta_files/*", "remote_repo_meta_files/.gitignore"],
+    },
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages. See:
