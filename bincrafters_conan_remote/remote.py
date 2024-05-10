@@ -19,6 +19,8 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler())
 
+cached_headers = {}
+
 def create_tarfile(file_paths: [str] = ["requirements.txt",]):
     # Create an in-memory file
     data = io.BytesIO()
@@ -34,16 +36,21 @@ def create_tarfile(file_paths: [str] = ["requirements.txt",]):
     return data
 
 
-
 @app.get("/")
 def read_root(request: Request):
     user_agent = request.headers.get('user-agent')
     return {"Hello": "World", "User-Agent": user_agent, "pwd": os.getcwd()}
 
 
-@app.get("/v1/ping")
-def v1_ping():
-    return Response(headers={'x-conan-server-version': '0.20.0', 'x-conan-server-capabilities': 'complex_search,checksum_deploy,revisions,matrix_params'})
+def v1_ping(remote_http_url, user_agent):
+    if remote_http_url in cached_headers:
+        headers = cached_headers[remote_http_url]
+    else:
+        r = make_request(f"{remote_http_url}{conf['filename_server_conan_headers']}", user_agent)
+        headers = json.loads(r.content)
+        cached_headers[remote_http_url] = headers
+    return Response(headers=headers)
+
 
 @app.get("/{url_path:path}")
 async def get_external_site(request: Request, url_path: str):
@@ -84,6 +91,12 @@ async def get_external_site(request: Request, url_path: str):
     logger.info(f"url_path: {url_path}, cache_url_path: {cache_url_path}")
 
     default_response_type = "application/json"
+
+    if url_path == "v1/ping":
+        return v1_ping(remote_http_url=remote_http_url, user_agent=user_agent)
+
+    if not remote_http_url in cached_headers:
+        _ = v1_ping(remote_http_url=remote_http_url, user_agent=user_agent)
 
     # Special handling of binary files
     if url_path.endswith(".tgz"):
@@ -142,7 +155,7 @@ async def get_external_site(request: Request, url_path: str):
         f.write("\n".encode())
         f.write(r.content)
 
-    return Response(content=r.content, media_type=content_type, headers={'x-conan-server-version': '0.20.0', 'x-conan-server-capabilities': 'complex_search,checksum_deploy,revisions,matrix_params'})
+    return Response(content=r.content, media_type=content_type, headers=cached_headers[remote_http_url])
 
 
 
