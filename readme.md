@@ -2,8 +2,9 @@
 
 This tool is something like a locally run proxy server to provide the Conan client with a Conan remote as it expects.
 
+Install via `pip install .`
 
-Start via `fastapi dev main.py`
+Start via `bincrafters-conan-remote run`
 
 Add a Conan remote like `http://127.0.0.1:8000/r/github+bincrafters_remote+testing_v-998+bincrafters/`
 
