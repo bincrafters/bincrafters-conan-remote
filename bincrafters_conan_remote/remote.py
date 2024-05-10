@@ -1,17 +1,17 @@
 from typing import Union
-import logging
 import httpx
-import tarfile 
 import io
-import os 
 import json
+import logging
+import os 
+import tarfile 
 import uvicorn
 
 from fastapi import FastAPI, Request
 from fastapi.responses import Response
 from starlette.responses import RedirectResponse, StreamingResponse
 
-from bincrafters_conan_remote.helpers import conf, make_request
+from bincrafters_conan_remote.helpers import conf, make_request, make_request_async_multiple
 
 
 app = FastAPI()
@@ -131,9 +131,13 @@ async def get_external_site(request: Request, url_path: str):
             logger.info(f"File List url: {remote_http_url}{url_path}{remote_http_suffix}")
             file_list = file_list_r.json()
             logger.info(f"File List: {file_list}")
+            request_urls = []
             for tar_file in file_list["files"]:
                 url_path_dir = "/".join(url_path.split('/')[:-1])
-                file_content_r = make_request(f"{remote_http_url}{url_path_dir}/{tar_file}", user_agent)
+                request_urls.append(f"{remote_http_url}{url_path_dir}/{tar_file}")
+                
+            request_responses = await make_request_async_multiple(request_urls, user_agent)
+            for file_content_r in request_responses:
                 file_content = file_content_r.content
                 tar_filename = "/".join(tar_file.split('/')[1:])
                 info = tarfile.TarInfo(name=tar_file)

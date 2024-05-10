@@ -1,11 +1,9 @@
 
-import logging
+import asyncio
 import httpx
+import logging
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-logger.addHandler(logging.StreamHandler())
-
 
 conf = {
     "filename_server_conan_headers": "server_headers.json",
@@ -20,4 +18,16 @@ conf = {
 def make_request(getting_url: str, user_agent: str, follow_redirects: bool = True):
     with httpx.Client(follow_redirects=follow_redirects) as client:
         logger.info(f"Getting URL: {getting_url}")
-        return client.get(getting_url, headers={'User-Agent': user_agent})
+        return client.get(getting_url, headers={"User-Agent": user_agent})
+
+
+async def make_request_async_multiple(urls: list[str], user_agent: str, follow_redirects: bool = True):
+    async def _make_request_async(getting_url: str, client: httpx.AsyncClient):
+        logger.info(f"Getting URL: {getting_url}")
+        response = await client.get(getting_url, headers={"User-Agent": user_agent})
+        return response
+
+    async with httpx.AsyncClient(follow_redirects=follow_redirects) as client:
+        requests = [_make_request_async(url, client) for url in urls]
+        response = await asyncio.gather(*requests)
+        return response
