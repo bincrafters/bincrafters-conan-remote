@@ -70,6 +70,8 @@ jobs:
     runs-on: ubuntu-22.04
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
     needs: test
+    permissions:
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
@@ -81,6 +83,3 @@ jobs:
         python setup.py sdist
     - name: Publish package
       uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_TOKEN }}
