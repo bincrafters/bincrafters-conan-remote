@@ -6,7 +6,7 @@ Install via `pip install .`
 
 Start via `bincrafters-conan-remote run`
 
-Add a Conan remote like `http://127.0.0.1:8000/r/github+bincrafters_remote+testing_v-998+bincrafters/`
+Add a Conan remote like `http://127.0.0.1:8042/r/github+bincrafters_remote+testing_v-998+bincrafters/`
 
 
 ## Limitations
