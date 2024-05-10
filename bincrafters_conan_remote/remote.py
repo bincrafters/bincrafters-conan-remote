@@ -111,7 +111,7 @@ async def get_external_site(request: Request, url_path: str):
         revisions_url = f"{remote_http_url}{tmp_path}/revisions.json"
         latest_revision = get_latest_revision(remote_http_url_revisions=revisions_url, user_agent=user_agent)
         logger.info(f"Latest Revision: {latest_revision}")
-        return Response(content=r.content, media_type="application/json", headers=cached_headers[remote_http_url])
+        return Response(content=json.dumps(latest_revision).encode(), media_type="application/json", headers=cached_headers[remote_http_url])
 
     # Special handling of binary files
     if url_path.endswith(".tgz"):
@@ -129,7 +129,6 @@ async def get_external_site(request: Request, url_path: str):
 
             file_list_r = make_request(f"{remote_http_url}{url_path}{remote_http_suffix}", user_agent)
             logger.info(f"File List url: {remote_http_url}{url_path}{remote_http_suffix}")
-            logger.info(f"File List: {file_list_r.content}")
             file_list = file_list_r.json()
             logger.info(f"File List: {file_list}")
             for tar_file in file_list["files"]:
