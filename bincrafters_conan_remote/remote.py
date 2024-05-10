@@ -54,6 +54,11 @@ def v1_ping(remote_http_url, user_agent):
         cached_headers[remote_http_url] = headers
     return Response(headers=headers)
 
+def get_latest_revision(remote_http_url_revisions, user_agent):
+    r = make_request(f"{remote_http_url_revisions}", user_agent)
+    revisions = r.json()
+    # https://github.com/conan-io/conan/blob/80fee05d5811608511bbb30a965afd66bdc13311/conans/server/revision_list.py#L40
+    return revisions["revisions"][-1]
 
 @app.get("/{url_path:path}")
 async def get_external_site(request: Request, url_path: str):
@@ -100,6 +105,13 @@ async def get_external_site(request: Request, url_path: str):
 
     if not remote_http_url in cached_headers:
         _ = v1_ping(remote_http_url=remote_http_url, user_agent=user_agent)
+
+    if url_path.endswith("latest"):
+        tmp_path = "/".join(url_path.split("/")[:-1])
+        revisions_url = f"{remote_http_url}{tmp_path}/revisions.json"
+        latest_revision = get_latest_revision(remote_http_url_revisions=revisions_url, user_agent=user_agent)
+        logger.info(f"Latest Revision: {latest_revision}")
+        return Response(content=r.content, media_type="application/json", headers=cached_headers[remote_http_url])
 
     # Special handling of binary files
     if url_path.endswith(".tgz"):
