@@ -42,7 +42,7 @@ jobs:
         conan user
         conan config set general.revisions_enabled=1
         conan remote remove conancenter
-        conan remote add inexorgame "http://127.0.0.1:8000/r/github+bincrafters_remote+testing_v-998+inexorgame/""
+        conan remote add inexorgame "http://127.0.0.1:8000/r/github+bincrafters_remote+testing_v-998+inexorgame/"
         conan remote list
     - name: Tests
       run: |
