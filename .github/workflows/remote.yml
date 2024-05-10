@@ -46,5 +46,6 @@ jobs:
         conan remote list
     - name: Tests
       run: |
-        conan download --recipe InexorGlueGen/0.6.11@inexorgame/stable
-        conan download --recipe grpc/1.34.1@inexorgame/stable#0
+        conan download -r inexorgame --recipe InexorGlueGen/0.6.11@inexorgame/stable
+        conan download -r inexorgame --recipe grpc/1.34.1@inexorgame/stable#0
+        conan download --recipe v8/7.6.66@inexorgame/testing
