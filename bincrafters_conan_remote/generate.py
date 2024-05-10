@@ -1,7 +1,6 @@
 from typing import Union
 import logging
 import logging.config
-import httpx
 import tarfile 
 import io
 import os 
@@ -18,6 +17,8 @@ from fastapi.responses import Response
 from starlette.responses import RedirectResponse, StreamingResponse
 import uvicorn
 
+from bincrafters_conan_remote.helpers import make_request
+
 
 app = FastAPI(debug=True)
 # logging.config.fileConfig("logging.conf")
@@ -32,11 +33,6 @@ cached_headers = {}
 # Toggle, if True then it saves .tgz files
 CREATE_FULL_LOCAL_BACKUP = False
 
-async def make_request(getting_url: str, user_agent: str):
-    async with httpx.AsyncClient(follow_redirects=True) as client:
-        # logger.info(f"Getting URL: {getting_url}")
-        r = await client.get(getting_url, headers={'User-Agent': user_agent})
-    return r
 
 @app.get("/{url_path:path}")
 async def get_external_site(request: Request, url_path: str):
@@ -79,7 +75,7 @@ async def get_external_site(request: Request, url_path: str):
     elif url_path.endswith(".tgz"):
         default_response_type = "application/gzip"
 
-    r = await make_request(f"{remote_http_url}{url_path}", user_agent)
+    r = make_request(f"{remote_http_url}{url_path}", user_agent)
     # logger.info(f"Headers: {r.headers}")
     content_type = r.headers.get("Content-Type", default_response_type)
 

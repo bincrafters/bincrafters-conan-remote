@@ -11,6 +11,9 @@ from fastapi import FastAPI, Request
 from fastapi.responses import Response
 from starlette.responses import RedirectResponse, StreamingResponse
 
+from bincrafters_conan_remote.helpers import make_request
+
+
 app = FastAPI()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -30,11 +33,7 @@ def create_tarfile(file_paths: [str] = ["requirements.txt",]):
     data.seek(0)
     return data
 
-async def make_request(getting_url: str, user_agent: str):
-    async with httpx.AsyncClient() as client:
-        logger.info(f"Getting URL: {getting_url}")
-        r = await client.get(getting_url, headers={'User-Agent': user_agent})
-    return r
+
 
 @app.get("/")
 def read_root(request: Request):
@@ -101,14 +100,14 @@ async def get_external_site(request: Request, url_path: str):
             #for file_path in file_paths:
             #    tar.add(file_path)
 
-            file_list_r = await make_request(f"{remote_http_url}{url_path}{remote_http_suffix}", user_agent)
+            file_list_r = make_request(f"{remote_http_url}{url_path}{remote_http_suffix}", user_agent)
             logger.info(f"File List url: {remote_http_url}{url_path}{remote_http_suffix}")
             logger.info(f"File List: {file_list_r.content}")
             file_list = file_list_r.json()
             logger.info(f"File List: {file_list}")
             for tar_file in file_list["files"]:
                 url_path_dir = "/".join(url_path.split('/')[:-1])
-                file_content_r = await make_request(f"{remote_http_url}{url_path_dir}/{tar_file}", user_agent)
+                file_content_r = make_request(f"{remote_http_url}{url_path_dir}/{tar_file}", user_agent)
                 file_content = file_content_r.content
                 tar_filename = "/".join(tar_file.split('/')[1:])
                 info = tarfile.TarInfo(name=tar_file)
@@ -126,10 +125,8 @@ async def get_external_site(request: Request, url_path: str):
         if remote_type in ["local", "github"]:
             remote_http_suffix = ".json"
 
-    async with httpx.AsyncClient() as client:
-        getting_url = f"{remote_http_url}{url_path}{remote_http_suffix}"
-        logger.info(f"Getting URL: {getting_url}")
-        r = await client.get(getting_url, headers={'User-Agent': user_agent})
+    getting_url = f"{remote_http_url}{url_path}{remote_http_suffix}"
+    r = make_request(getting_url, user_agent)
 
     # logger.info(f"Headers: {r.headers}")
     content_type = r.headers.get('Content-Type', 'application/json')
