@@ -1,4 +1,5 @@
 
+from typing import List # To support type hints of List[str] for Python 3.8, list[str] is 3.9+
 import asyncio
 import httpx
 import logging
@@ -21,7 +22,7 @@ def make_request(getting_url: str, user_agent: str, follow_redirects: bool = Tru
         return client.get(getting_url, headers={"User-Agent": user_agent})
 
 
-async def make_request_async_multiple(urls: list[str], user_agent: str, follow_redirects: bool = True):
+async def make_request_async_multiple(urls: List[str], user_agent: str, follow_redirects: bool = True):
     async def _make_request_async(getting_url: str, client: httpx.AsyncClient):
         logger.info(f"Getting URL: {getting_url}")
         response = await client.get(getting_url, headers={"User-Agent": user_agent})
