@@ -9,6 +9,7 @@ logger.addHandler(logging.StreamHandler())
 
 conf = {
     "filename_server_conan_headers": "server_headers.json",
+    "headers_default": {"x-conan-server-version": "0.20.0", "x-conan-server-capabilities": "complex_search,checksum_deploy,revisions,matrix_params"},
     "user_agent_default": "Conan/1.65.0-dev (Windows 10; Python 3.12.2; AMD64)",
 }
 

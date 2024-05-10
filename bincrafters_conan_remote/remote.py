@@ -47,7 +47,10 @@ def v1_ping(remote_http_url, user_agent):
         headers = cached_headers[remote_http_url]
     else:
         r = make_request(f"{remote_http_url}{conf['filename_server_conan_headers']}", user_agent)
-        headers = json.loads(r.content)
+        if r.status_code == 404:
+            headers = conf["headers_default"]
+        else:
+            headers = json.loads(r.content)
         cached_headers[remote_http_url] = headers
     return Response(headers=headers)
 
