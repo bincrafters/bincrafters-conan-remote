@@ -22,7 +22,7 @@ on:
 
 
 jobs:
-  test-remote:
+  test:
     name: "Tests"
     runs-on: ubuntu-22.04
     env:
@@ -64,3 +64,22 @@ jobs:
         conan remote remove inexorgame
         conan remote add inexorgame "http://127.0.0.1:8042/"
         conan download --recipe Protobuf/3.5.1@inexorgame/stable#0
+
+  deploy:
+    name: Deploy to PyPi
+    runs-on: ubuntu-22.04
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+    needs: test
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - name: Build
+      run: |
+        python setup.py sdist
+    - name: Publish package
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_TOKEN }}
