@@ -17,7 +17,7 @@ from fastapi.responses import Response
 from starlette.responses import RedirectResponse, StreamingResponse
 import uvicorn
 
-from bincrafters_conan_remote.helpers import make_request
+from bincrafters_conan_remote.helpers import conf, make_request
 
 
 app = FastAPI(debug=True)
@@ -67,7 +67,7 @@ async def get_external_site(request: Request, url_path: str):
     # User Agent Manipulation
     user_agent = request.headers.get('user-agent')
     if not user_agent.startswith("Conan"):
-        user_agent = "Conan/1.65.0-dev (Windows 10; Python 3.12.2; AMD64)"
+        user_agent = conf["user_agent_default"]
 
     default_response_type = "application/json"
     if url_path.endswith(".txt") or url_path.endswith(".py"):
@@ -104,7 +104,7 @@ async def get_external_site(request: Request, url_path: str):
             if header.startswith("x-conan"):
                 cached_headers[header] = r.headers[header]
         cache_path_parts = cache_path.split(os.sep)
-        with open(os.path.join(*cache_path_parts[:4], "server_headers.json"), "w") as f:
+        with open(os.path.join(*cache_path_parts[:4], conf["filename_server_conan_headers"]), "w") as f:
             f.write(json.dumps(cached_headers))
 
     if not url_path in ["v1/ping",]:

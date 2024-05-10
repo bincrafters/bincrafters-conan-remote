@@ -11,7 +11,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import Response
 from starlette.responses import RedirectResponse, StreamingResponse
 
-from bincrafters_conan_remote.helpers import make_request
+from bincrafters_conan_remote.helpers import conf, make_request
 
 
 app = FastAPI()
@@ -47,11 +47,10 @@ def v1_ping():
 
 @app.get("/{url_path:path}")
 async def get_external_site(request: Request, url_path: str):
-
     # User Agent Manipulation
     user_agent = request.headers.get('user-agent')
     if not user_agent.startswith("Conan"):
-        user_agent = "Conan/1.65.0-dev (Windows 10; Python 3.12.2; AMD64)"
+        user_agent = conf["user_agent_default"]
 
     # Remote Source Selection
     # example /r/github+bincrafters_remote+testing_v-1000+bincrafters/
