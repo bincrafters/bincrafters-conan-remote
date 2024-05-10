@@ -3,18 +3,20 @@ name: "Local Remote Testing"
 on:
   push:
     paths:
-      - "main.py"
-      - "setup.py"
       - ".github/workflows/ci.yml"
-      - "requirements.txt"
-      - "requirements_dev.txt"
+      - "bincrafters_conan_remote/main.py"
+      - "bincrafters_conan_remote/remote.py"
+      - "bincrafters_conan_remote/requirements.txt"
+      - "bincrafters_conan_remote/requirements_dev.txt"
+      - "setup.py"
   pull_request:
     paths:
-      - "main.py"
-      - "setup.py"
       - ".github/workflows/ci.yml"
-      - "requirements.txt"
-      - "requirements_dev.txt"
+      - "bincrafters_conan_remote/main.py"
+      - "bincrafters_conan_remote/remote.py"
+      - "bincrafters_conan_remote/requirements.txt"
+      - "bincrafters_conan_remote/requirements_dev.txt"
+      - "setup.py"
 
 
 jobs:
@@ -34,7 +36,7 @@ jobs:
         pip install -r requirements_dev.txt
     - name: Start Local Server
       run: |
-        fastapi dev main.py & disown
+        fastapi dev remote.py & disown
     - name: Configure Conan
       run: |
         conan --version

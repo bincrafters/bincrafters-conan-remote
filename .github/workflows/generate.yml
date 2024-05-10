@@ -3,18 +3,18 @@ name: "Generate Static Remote"
 on:
   push:
     paths:
-      - "generate.py"
       - ".github/workflows/generate.yml"
       - "remote_repo_meta_files/**"
-      - "requirements.txt"
-      - "requirements_dev.txt"
+      - "bincrafters_conan_remote/generate.py"
+      - "bincrafters_conan_remote/requirements.txt"
+      - "bincrafters_conan_remote/requirements_dev.txt"
   pull_request:
     paths:
-      - "generate.py"
       - ".github/workflows/generate.yml"
       - "remote_repo_meta_files/**"
-      - "requirements.txt"
-      - "requirements_dev.txt"
+      - "bincrafters_conan_remote/generate.py"
+      - "bincrafters_conan_remote/requirements.txt"
+      - "bincrafters_conan_remote/requirements_dev.txt"
 
 jobs:
   test-remote:
