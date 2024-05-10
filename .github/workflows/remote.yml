@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - ".github/workflows/remote.yml"
+      - "bincrafters_conan_remote/helper.py"
       - "bincrafters_conan_remote/main.py"
       - "bincrafters_conan_remote/remote.py"
       - "bincrafters_conan_remote/requirements.txt"
@@ -12,6 +13,7 @@ on:
   pull_request:
     paths:
       - ".github/workflows/remote.yml"
+      - "bincrafters_conan_remote/helper.py"
       - "bincrafters_conan_remote/main.py"
       - "bincrafters_conan_remote/remote.py"
       - "bincrafters_conan_remote/requirements.txt"
