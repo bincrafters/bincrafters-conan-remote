@@ -102,6 +102,14 @@ async def get_external_site(request: Request, url_path: str):
     # logger.info(f"cache_dir: {cache_dir}")
     os.makedirs(cache_dir, exist_ok=True)
 
+    if url_path == "v1/ping":
+        for header in r.headers:
+            if header.startswith("x-conan"):
+                cached_headers[header] = r.headers[header]
+        cache_path_parts = cache_path.split(os.sep)
+        with open(os.path.join(cache_path_parts[0], cache_path_parts[1], "server_headers.json"), "w") as f:
+            f.write(json.dumps(cached_headers))
+
     if not url_path in ["v1/ping",]:
         if filename.endswith(".tgz"):
             if CREATE_FULL_LOCAL_BACKUP:
@@ -114,9 +122,6 @@ async def get_external_site(request: Request, url_path: str):
             with open(os.path.join(cache_dir, filename + ".json"), "w") as f:
                 json.dump(json_data, f)
         else:
-            for header in r.headers:
-                if header.startswith("x-conan"):
-                    cached_headers[header] = r.headers[header]
             with open(os.path.join(cache_path), "wb") as f:
                 f.write(r.content)
 
