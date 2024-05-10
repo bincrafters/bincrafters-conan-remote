@@ -107,7 +107,7 @@ async def get_external_site(request: Request, url_path: str):
             if header.startswith("x-conan"):
                 cached_headers[header] = r.headers[header]
         cache_path_parts = cache_path.split(os.sep)
-        with open(os.path.join(cache_path_parts[0], cache_path_parts[1], "server_headers.json"), "w") as f:
+        with open(os.path.join(*cache_path_parts[:4], "server_headers.json"), "w") as f:
             f.write(json.dumps(cached_headers))
 
     if not url_path in ["v1/ping",]:
