@@ -25,11 +25,16 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       CONAN_LOGGING_LEVEL: 10
+    strategy:
+      matrix:
+        python_version:
+          - "3.8"
+          - "3.12"
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
       with:
-        python-version: "3.12"
+        python-version: ${{ matrix.python_version }}
     - name: Install package
       run: |
         pip install .
