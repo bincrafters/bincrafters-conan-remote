@@ -18,6 +18,7 @@ def test_download_revision_specific():
         expected_outputs=[
             "Downloading conanmanifest.txt",
             "Downloading conanfile.py",
+            "Downloading conan_export.tgz",
             "Downloading conan_sources.tgz"]
         )
 
