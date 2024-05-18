@@ -9,6 +9,7 @@ on:
       - "bincrafters_conan_remote/remote.py"
       - "bincrafters_conan_remote/requirements.txt"
       - "bincrafters_conan_remote/requirements_dev.txt"
+      - "bincrafters_conan_remote/test/*"
       - "setup.py"
   pull_request:
     paths:
@@ -18,6 +19,7 @@ on:
       - "bincrafters_conan_remote/remote.py"
       - "bincrafters_conan_remote/requirements.txt"
       - "bincrafters_conan_remote/requirements_dev.txt"
+      - "bincrafters_conan_remote/test/*"
       - "setup.py"
 
 
