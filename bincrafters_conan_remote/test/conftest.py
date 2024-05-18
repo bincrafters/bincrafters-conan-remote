@@ -15,6 +15,7 @@ def setup_module():
     time.sleep(10)
     print("Done sleeping")
     shutil.rmtree(env_vars["CONAN_HOME"], ignore_errors=True)
+    cli_command(["conan", "--version"])
     cli_command(["conan", "user"]) # TODO: Switch ConanV1 / ConanV2
     cli_command(["conan", "config", "set", "general.revisions_enabled=1"]) # TODO: Switch ConanV1 / ConanV2
     cli_command(["conan", "remote", "remove", "conancenter"])

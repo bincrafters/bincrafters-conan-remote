@@ -34,7 +34,7 @@ This tool is something like a locally run proxy server to provide the Conan clie
     * conan install
     * conan user
     * conan upload
-    * get overview conan command / patch / server request that we want to support
+    * get overview conan command / path / server request that we want to support
   * Write tests for all conan cli command that we want to cover
   * Figure out if the Conan client supports download package downloads from an absolut URL or only relatives one
   * Is the Conan Server Api v2 identical for Conan 1 und 2? If yes, how does Conan determinate packages if they are for 1 or 2? Is the User Agent relevant?
