@@ -41,7 +41,7 @@ def read_root(request: Request):
     return {"Hello": "World", "User-Agent": user_agent, "pwd": os.getcwd()}
 
 
-def v1_ping(remote_http_url, user_agent):
+def v2_ping(remote_http_url, user_agent):
     if remote_http_url in cached_headers:
         headers = cached_headers[remote_http_url]
     else:
@@ -99,11 +99,11 @@ async def get_external_site(request: Request, url_path: str):
 
     default_response_type = "application/json"
 
-    if url_path == "v1/ping":
-        return v1_ping(remote_http_url=remote_http_url, user_agent=user_agent)
+    if url_path == "v1/ping" or url_path == "v2/ping":
+        return v2_ping(remote_http_url=remote_http_url, user_agent=user_agent)
 
     if not remote_http_url in cached_headers:
-        _ = v1_ping(remote_http_url=remote_http_url, user_agent=user_agent)
+        _ = v2_ping(remote_http_url=remote_http_url, user_agent=user_agent)
 
     if url_path.endswith("latest"):
         tmp_path = "/".join(url_path.split("/")[:-1])

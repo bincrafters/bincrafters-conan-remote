@@ -53,7 +53,7 @@ async def get_external_site(request: Request, url_path: str):
     # logger.info(f"Remote Type: {remote_type}, Remote HTTP URL: {remote_http_url}, Remote Name: {remote_config}")
     # logger.info(f"url_path: {url_path}, cache_url_path: {cache_url_path}")
 
-    if url_path == "v1/ping" and len(cached_headers) != 0:
+    if (url_path == "v1/ping" or url_path == "v2/ping") and len(cached_headers) != 0:
         # logger.info(f"Cached headers: {cached_headers}")
         return Response(headers=cached_headers)
 
@@ -92,7 +92,7 @@ async def get_external_site(request: Request, url_path: str):
     # logger.info(f"cache_dir: {cache_dir}")
     os.makedirs(cache_dir, exist_ok=True)
 
-    if url_path == "v1/ping":
+    if url_path == "v1/ping" or url_path == "v2/ping":
         for header in r.headers:
             if header.startswith("x-conan"):
                 cached_headers[header] = r.headers[header]
@@ -100,7 +100,7 @@ async def get_external_site(request: Request, url_path: str):
         with open(os.path.join(*cache_path_parts[:4], conf["filename_server_conan_headers"]), "w") as f:
             f.write(json.dumps(cached_headers))
 
-    if not url_path in ["v1/ping",]:
+    if not url_path in ["v1/ping","v2/ping",]:
         if filename.endswith(".tgz"):
             if CREATE_FULL_LOCAL_BACKUP:
                 with open(os.path.join(cache_path), "wb") as f:
