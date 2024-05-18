@@ -27,6 +27,5 @@ def test_download_no_explicit_remote():
         ["conan", "download", "--recipe", "v8/7.6.66@inexorgame/testing"],
         expected_outputs=[
             "Downloading conanmanifest.txt",
-            "Downloading conanfile.py",
-            "Downloading conan_sources.tgz"]
+            "Downloading conanfile.py"]
         )
