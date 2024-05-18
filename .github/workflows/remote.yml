@@ -43,7 +43,7 @@ jobs:
         python-version: ${{ matrix.python_version }}
     - name: Install package
       run: |
-        pip install .
+        pip install .[dev]
     - name: Start Local Server
       run: |
         bincrafters-conan-remote run & disown
@@ -55,7 +55,7 @@ jobs:
         conan remote remove conancenter
         conan remote add inexorgame "http://127.0.0.1:8042/r/github+bincrafters_remote+testing_v-998+inexorgame/"
         conan remote list
-    - name: Tests
+    - name: Direct Tests
       run: |
         # conan download latest revision
         conan download -r inexorgame --recipe InexorGlueGen/0.6.11@inexorgame/stable
@@ -67,6 +67,10 @@ jobs:
         conan remote remove inexorgame
         conan remote add inexorgame "http://127.0.0.1:8042/"
         conan download --recipe Protobuf/3.5.1@inexorgame/stable#0
+    - name: Pytest
+      run: |
+        pytest bincrafters_conan_remote/test -vv -s
+      
 
   deploy:
     name: Deploy to PyPi

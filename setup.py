@@ -26,7 +26,7 @@ def get_requires(filename):
 
 
 project_requirements = get_requires(os.path.join("bincrafters_conan_remote", "requirements.txt"))
-# dev_requirements = get_requires(os.path.join("bincrafters_conan_remote", "requirements_dev.txt"))
+dev_requirements = get_requires(os.path.join("bincrafters_conan_remote", "requirements_dev.txt"))
 
 
 setup(
@@ -91,10 +91,10 @@ setup(
     # dependencies). You can install these using the following syntax,
     # for example:
     # $ pip install -e .[dev,test]
-    # extras_require={
-    #     'dev': dev_requirements,
+    extras_require={
+        "dev": dev_requirements,
     #     'test': dev_requirements,
-    #},
+    },
 
     # If there are data files included in your packages that need to be
     # installed, specify them here.

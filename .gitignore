@@ -13,3 +13,5 @@ dist/
 env/
 venv
 .pytest_cache/
+__test_c/
+__test_conan_home/

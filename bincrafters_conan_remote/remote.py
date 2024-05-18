@@ -5,6 +5,7 @@ import json
 import logging
 import os 
 import tarfile 
+import threading
 import uvicorn
 
 from fastapi import FastAPI, Request
@@ -177,3 +178,8 @@ async def get_external_site(request: Request, url_path: str):
 
 def run_remote(args):
     uvicorn.run(app, host="0.0.0.0", port=args.port)
+
+def run_remote_in_thread(args):
+    t = threading.Thread(target=run_remote, args=(args,))
+    t.daemon = True
+    t.start()

@@ -22,7 +22,8 @@ This tool is something like a locally run proxy server to provide the Conan clie
   * Features that are covered by both v1 and v2 of the REST API will only be supported via the v2 API
   * Only Conan 1.* is explicitly supported for now, altough the REST API does not seem to be Conan 1/2 specific. So Conan v2 might just work
   * Only Python >= 3.8 is supported. Conan itself supports >= 3.6
-  * From the point-of-view of the Conan client this remote is ready-only by design. No upload, no deletion etc.
+  * Currently not planned to support:
+    * conan remove
 
 
 ## TODO
@@ -31,6 +32,8 @@ This tool is something like a locally run proxy server to provide the Conan clie
     * conan search
     * conan download
     * conan install
+    * conan user
+    * conan upload
     * get overview conan command / patch / server request that we want to support
   * Write tests for all conan cli command that we want to cover
   * Figure out if the Conan client supports download package downloads from an absolut URL or only relatives one

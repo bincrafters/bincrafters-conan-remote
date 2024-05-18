@@ -120,7 +120,7 @@ async def get_external_site(request: Request, url_path: str):
 
 def _shell(command: str, check: bool=True) -> str:
     logger.info(f"Run: {command}")
-    process = subprocess.run(command, shell=True, check=check, stdout=subprocess.PIPE, universal_newlines=True)
+    process = subprocess.run(command, shell=True, check=check, stdout=subprocess.PIPE, text=True)
     logger.info(f"Out: {process.stdout}")
     return process.stdout
 
@@ -137,6 +137,7 @@ def run_generate(args):
     remote_url_quoted = "{" + args.remote_url + "}"
 
     server_thread = threading.Thread(target=_run_uvicorn, args=(_PORT,))
+    server_thread.daemon = True
     server_thread.start()
 
     # uvicorn.run(app, host="0.0.0.0", port=_PORT, log_level="info")
