@@ -12,7 +12,9 @@ env_vars = {
 }
 
 def _run_command(command:List[str]):
-    return subprocess.run(command, capture_output=True, text=True, env=env_vars)
+    env = os.environ.copy()
+    env.update(env_vars)
+    return subprocess.run(command, capture_output=True, text=True, env=env)
 
 def cli_command(command:List[str], expected_returncode:int=0, expected_outputs:List[str]=[]):
     result = _run_command(command)
