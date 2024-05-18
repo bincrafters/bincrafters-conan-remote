@@ -56,7 +56,7 @@ jobs:
         git config --global user.name "${{ secrets.BOT_GITHUB_NAME }}"
         rm -rf remote/r/${{ env.REMOTE_NAME }}/
         cp -r cache/generate/* remote/
-        cp -r remote_repo_meta_files/* remote/
+        cp -r bincrafters_conan_remote/remote_repo_meta_files/* remote/
         cd remote
         git add -A .
         git commit -m "Update remote"
